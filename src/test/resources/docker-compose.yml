@@ -1,0 +1,30 @@
+version: '2'
+services:
+  wiremock:
+    image: rodolpheche/wiremock
+    ports:
+      - "8888:8080"
+    command: --extensions com.opentable.extension.BodyTransformer
+    volumes:
+      - $HOME/autoscaling/src/test/resources/docker-compose/wiremock/files:/home/wiremock/__files
+      - $HOME/autoscaling/src/test/resources/docker-compose/wiremock/mappings:/home/wiremock/mappings
+      - $HOME/autoscaling/src/test/resources/docker-compose/wiremock/extensions:/var/wiremock/extensions
+  postgresql:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+    volumes:
+      - $HOME/autoscaling/src/test/resources/docker-compose/postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+  sonarqube:
+    image: sonarqube
+    depends_on:
+      - postgresql
+    ports:
+      - "9000:9000"
+    environment:
+      - sonar.jdbc.username=sonar
+      - sonar.jdbc.password=sonar
+      - sonar.jdbc.url=jdbc:postgresql://postgresql:5432/sonar

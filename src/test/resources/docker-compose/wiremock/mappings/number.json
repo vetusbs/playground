@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/number"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "number.json",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["body-transformer"],
+    "delayDistribution": {
+      "type": "uniform",
+      "lower": 100,
+      "upper": 250
+    }
+  }
+}
